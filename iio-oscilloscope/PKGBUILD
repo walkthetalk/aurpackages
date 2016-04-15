@@ -1,0 +1,37 @@
+# Maintainer: Yi Qingliang <niqingliang2003@gmail.com>
+
+pkgname=iio-oscilloscope
+pkgver=r1864.43a9af3
+pkgrel=1
+pkgdesc="High level API for interfacing with Industrial I/O devices"
+arch=('i686' 'x86_64')
+license=('LGPL-2.1')
+depends=('gtkdatabox' 'fftw' 'libmatio' 'libiio')
+url="https://wiki.analog.com/resources/tools-software/linux-software/iio_oscilloscope"
+source=("git+https://github.com/analogdevicesinc/iio-oscilloscope.git"
+        'replace_xdg-utils_with_install.patch'
+)
+md5sums=('SKIP'
+         '0f4d399a2cdd476f4a7e8828be3ddc67'
+)
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git describe --always)"
+}
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  patch -p1 -i "$srcdir/replace_xdg-utils_with_install.patch"
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  #find -type f|xargs sed -i 's/sbin/bin/g'
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR="${pkgdir}" install
+}
