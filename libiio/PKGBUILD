@@ -1,0 +1,29 @@
+# Maintainer: Yi Qingliang <niqingliang2003@gmail.com>
+
+pkgname=libiio
+pkgver=r836.5f0fd6c
+pkgrel=1
+pkgdesc="High level API for interfacing with Industrial I/O devices"
+arch=('i686' 'x86_64')
+license=('LGPL-2.1')
+depends=('libxml2' 'bison' 'flex' 'python')
+url="https://wiki.analog.com/resources/tools-software/linux-software/libiio"
+source=("git+https://github.com/analogdevicesinc/libiio.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git describe --always)"
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  find -type f|xargs sed -i 's/sbin/bin/g'
+  cmake ./
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR="${pkgdir}" install
+}
