@@ -27,11 +27,10 @@ prepare() {
 
 build() {
   cd "$srcdir/$pkgname"
-  #find -type f|xargs sed -i 's/sbin/bin/g'
-  make
+  make PREFIX=/usr
 }
 
 package() {
   cd "$srcdir/$pkgname"
-  make DESTDIR="${pkgdir}" install
+  make PREFIX=/usr DESTDIR="${pkgdir}" install
 }
