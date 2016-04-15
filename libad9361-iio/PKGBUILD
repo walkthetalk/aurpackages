@@ -1,0 +1,28 @@
+# Maintainer: Yi Qingliang <niqingliang2003@gmail.com>
+
+pkgname=libad9361-iio
+pkgver=r15.faa8556
+pkgrel=1
+pkgdesc="library for IIO device ad9361"
+arch=('i686' 'x86_64')
+license=('LGPL-2.1')
+depends=('gtkdatabox' 'fftw' 'libmatio' 'libiio')
+url="https://wiki.analog.com/resources/tools-software/linux-software/iio_oscilloscope"
+source=("git+https://github.com/analogdevicesinc/libad9361-iio.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git describe --always)"
+}
+
+build() {
+  cd "$srcdir/$pkgname"
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ./
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR="${pkgdir}" install
+}
