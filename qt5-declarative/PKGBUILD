@@ -26,6 +26,7 @@ md5sums=('4f55b3617abdff14706d02d761d5a0aa'
 prepare() {
   mkdir -p build
 
+  cd ${_pkgfqn}
   patch -p1 -i "${srcdir}/insertAtFirstVisibleItem.patch"
   patch -p1 -i "${srcdir}/modelChangeKeepingMoveReason.patch"
 
@@ -38,7 +39,7 @@ build() {
 
   export PYTHON=python2
   qmake ../${_pkgfqn}
-  make
+  make -j8
 }
 
 package() {
