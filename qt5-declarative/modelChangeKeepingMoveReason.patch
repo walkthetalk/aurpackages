@@ -1,0 +1,12 @@
+Index: qtdeclarative-opensource-src-5.8.0/src/quick/items/qquickitemview.cpp
+===================================================================
+--- qtdeclarative-opensource-src-5.8.0.orig/src/quick/items/qquickitemview.cpp
++++ qtdeclarative-opensource-src-5.8.0/src/quick/items/qquickitemview.cpp
+@@ -1981,7 +1981,6 @@ bool QQuickItemViewPrivate::applyModelCh
+     }
+ 
+     updateUnrequestedIndexes();
+-    moveReason = QQuickItemViewPrivate::Other;
+ 
+     FxViewItem *prevVisibleItemsFirst = visibleItems.count() ? *visibleItems.constBegin() : 0;
+     int prevItemCount = itemCount;
