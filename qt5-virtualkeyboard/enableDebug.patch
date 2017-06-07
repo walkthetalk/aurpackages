@@ -1,0 +1,87 @@
+Index: qtvirtualkeyboard-opensource-src-5.8.0/src/virtualkeyboard/content/components/Keyboard.qml
+===================================================================
+--- qtvirtualkeyboard-opensource-src-5.8.0.orig/src/virtualkeyboard/content/components/Keyboard.qml
++++ qtvirtualkeyboard-opensource-src-5.8.0/src/virtualkeyboard/content/components/Keyboard.qml
+@@ -44,7 +44,12 @@ Item {
+     property int localeIndex: -1
+     property var availableLocaleIndices: []
+     property var availableCustomLocaleIndices: []
+-    property string locale: localeIndex >= 0 && localeIndex < layoutsModel.count ? layoutsModel.get(localeIndex, "fileName") : ""
++    property string locale: {
++		console.debug("localindex: " + localeIndex)
++		console.debug("layoutsModel.count" + layoutsModel.count)
++		console.debug("layoutsModel.get(localeIndex, \"fileName\"): " + layoutsModel.get(localeIndex, "fileName"))
++	    return (localeIndex >= 0 && localeIndex < layoutsModel.count ? layoutsModel.get(localeIndex, "fileName") : "")
++    }
+     property string inputLocale
+     property int defaultLocaleIndex: -1
+     property bool latinOnly: InputContext.inputMethodHints & Qt.ImhLatinOnly
+@@ -74,9 +79,11 @@ Item {
+     property alias soundEffect: soundEffect
+ 
+     function initDefaultInputMethod() {
++	    console.debug("init default input method start!")
+         try {
+             return Qt.createQmlObject('import QtQuick 2.0; import QtQuick.VirtualKeyboard 2.1; HunspellInputMethod {}', keyboard, "defaultInputMethod")
+         } catch (e) { }
++	    console.debug("init default input method stop!")
+         return plainInputMethod
+     }
+ 
+@@ -102,9 +109,12 @@ Item {
+         }
+     }
+     onLocaleChanged: {
++	    console.debug("onLocaleChanged start!")
+         inputMethodNeedsReset = true
++	    console.debug("onLocaleChanged xxx!")
+         inputModeNeedsReset = true
+         updateLayout()
++	    console.debug("onLocaleChanged stop!")
+     }
+     onInputLocaleChanged: {
+         if (Qt.locale(inputLocale).name !== "C")
+@@ -129,6 +139,7 @@ Item {
+     onFullScreenHandwritingModeChanged: if (keyboard.fullScreenHandwritingMode) keyboard.handwritingMode = true
+ 
+     Connections {
++        Component.onCompleted: { console.debug("yyyyy complete!") }
+         target: InputContext
+         onFocusChanged: {
+             if (InputContext.focus)
+@@ -310,6 +321,7 @@ Item {
+         }
+     }
+     Connections {
++        Component.onCompleted: { console.debug("xxxx complete!") }
+         target: InputContext.inputEngine
+         onVirtualKeyClicked: {
+             if (isAutoRepeat && keyboard.activeKey)
+@@ -328,17 +340,25 @@ Item {
+         id: layoutsModel
+         nameFilters: ["$"]
+         Component.onCompleted: {
+-            if (InputContext.fileExists("qrc:/QtQuick/VirtualKeyboard/content/layouts"))
++		console.debug("FolderListModel onCompleted:")
++            if (InputContext.fileExists("qrc:/QtQuick/VirtualKeyboard/content/layouts")) {
++
++		console.debug("FolderListModel onCompleted: 1")
+                 layoutsModel.folder = "qrc:/QtQuick/VirtualKeyboard/content/layouts"
+-            else
++	    }
++            else {
++		console.debug("FolderListModel onCompleted: 2")
+                 layoutsModel.folder = "../layouts"
++	    }
+         }
+     }
+     Connections {
+         target: layoutsModel
+         onCountChanged: {
++		console.debug("update locale: 1")
+             updateDefaultLocale()
+             localeIndex = defaultLocaleIndex
++		console.debug("update locale: done")
+         }
+     }
+     AlternativeKeys {

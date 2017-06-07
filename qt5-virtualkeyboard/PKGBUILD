@@ -14,18 +14,22 @@ depends=('qt5-declarative' 'qt5-svg' 'hunspell')
 makedepends=()
 groups=('qt' 'qt5')
 _pkgfqn="${pkgname/5-/}-opensource-src-${_qtver}"
-source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
-md5sums=('efdd5a64234dc0ef7e47505502ca5d28')
+source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
+        'enableDebug.patch')
+md5sums=('efdd5a64234dc0ef7e47505502ca5d28'
+         'SKIP')
 
 prepare() {
   mkdir -p build
+  cd ${_pkgfqn}
+  patch -p1 -i "${srcdir}/enableDebug.patch"
 }
 
 build() {
   cd build
 
   qmake ../${_pkgfqn} CONFIG+="lang-all handwriting arrow-key-navigation"
-  make
+  make -j8
 }
 
 package() {
