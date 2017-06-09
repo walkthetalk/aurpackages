@@ -1,0 +1,69 @@
+Index: qtvirtualkeyboard-opensource-src-5.8.0/src/virtualkeyboard/inputengine.cpp
+===================================================================
+--- qtvirtualkeyboard-opensource-src-5.8.0.orig/src/virtualkeyboard/inputengine.cpp
++++ qtvirtualkeyboard-opensource-src-5.8.0/src/virtualkeyboard/inputengine.cpp
+@@ -372,36 +372,36 @@ void InputEngine::setInputMethod(Abstrac
+ 
+             // Set current text case
+             d->inputMethod->setTextCase(d->textCase);
++        }
+ 
+-            // Allocate selection lists for the input method
+-            const QList<SelectionListModel::Type> activeSelectionLists = d->inputMethod->selectionLists();
+-            QList<SelectionListModel::Type> inactiveSelectionLists = d->selectionListModels.keys();
+-            for (const SelectionListModel::Type &selectionListType : activeSelectionLists) {
+-                auto it = d->selectionListModels.find(selectionListType);
+-                if (it == d->selectionListModels.end()) {
+-                    it = d->selectionListModels.insert(selectionListType, new SelectionListModel(this));
+-                    if (selectionListType == SelectionListModel::WordCandidateList) {
+-                        emit wordCandidateListModelChanged();
+-                    }
+-                }
+-                it.value()->setDataSource(inputMethod, selectionListType);
+-                if (selectionListType == SelectionListModel::WordCandidateList) {
+-                    emit wordCandidateListVisibleHintChanged();
+-                }
+-                inactiveSelectionLists.removeAll(selectionListType);
+-            }
++	// Allocate selection lists for the input method
++	const QList<SelectionListModel::Type> activeSelectionLists = d->inputMethod->selectionLists();
++	QList<SelectionListModel::Type> inactiveSelectionLists = d->selectionListModels.keys();
++	for (const SelectionListModel::Type &selectionListType : activeSelectionLists) {
++	    auto it = d->selectionListModels.find(selectionListType);
++	    if (it == d->selectionListModels.end()) {
++		it = d->selectionListModels.insert(selectionListType, new SelectionListModel(this));
++		if (selectionListType == SelectionListModel::WordCandidateList) {
++		    emit wordCandidateListModelChanged();
++		}
++	    }
++	    it.value()->setDataSource(inputMethod, selectionListType);
++	    if (selectionListType == SelectionListModel::WordCandidateList) {
++		emit wordCandidateListVisibleHintChanged();
++	    }
++	    inactiveSelectionLists.removeAll(selectionListType);
++	}
+ 
+-            // Deallocate inactive selection lists
+-            for (const SelectionListModel::Type &selectionListType : qAsConst(inactiveSelectionLists)) {
+-                const auto it = d->selectionListModels.constFind(selectionListType);
+-                if (it != d->selectionListModels.cend()) {
+-                    it.value()->setDataSource(0, selectionListType);
+-                    if (selectionListType == SelectionListModel::WordCandidateList) {
+-                        emit wordCandidateListVisibleHintChanged();
+-                    }
+-                }
+-            }
+-        }
++	// Deallocate inactive selection lists
++	for (const SelectionListModel::Type &selectionListType : qAsConst(inactiveSelectionLists)) {
++	    const auto it = d->selectionListModels.constFind(selectionListType);
++	    if (it != d->selectionListModels.cend()) {
++		it.value()->setDataSource(0, selectionListType);
++		if (selectionListType == SelectionListModel::WordCandidateList) {
++		    emit wordCandidateListVisibleHintChanged();
++		}
++	    }
++	}
+         emit inputMethodChanged();
+         emit inputModesChanged();
+         emit patternRecognitionModesChanged();
