@@ -1,6 +1,6 @@
 # Maintainer: David Baum <david.baum@naraesk.eu>
 pkgname=titania-git
-pkgver=5021
+pkgver=5023
 pkgrel=1
 pkgdesc="Use Titania to create standard complient X3D/VRML worlds for publishing on the World Wide Web and for creating stand alone applications"
 arch=('i686' 'x86_64')
@@ -45,5 +45,7 @@ build() {
 
 package() {
   cd titania
-  make DESTDIR="$pkgdir/" run
+  make run
+  echo $pkgdir
+  make DESTDIR="$pkgdir/" install
 }
